@@ -1,0 +1,25 @@
+{
+  "name": "tisure-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "@nuxtjs/axios": "^5.13.6",
+    "core-js": "^3.15.1",
+    "fitty": "^2.3.5",
+    "nuxt": "^2.15.7",
+    "phosphor-vue": "^1.3.1",
+    "tailwind-scrollbar-hide": "^1.1.5",
+    "textfit": "^2.4.0"
+  },
+  "devDependencies": {
+    "@nuxt/types": "~2.15.0",
+    "@nuxtjs/tailwindcss": "^4.2.0",
+    "postcss": "^8.3.5"
+  }
+}
