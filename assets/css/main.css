@@ -21,6 +21,15 @@
 }
 
 @font-face {
+  font-family: gotham-medium-italic;
+  src: url("../fonts/Gotham-MediumItalic.ttf");
+}
+
+.medium-font-italic {
+  font-family: gotham-medium-italic, serif;
+}
+
+@font-face {
   font-family: fzzs;
   src: url("../fonts/FZSSJW.ttf");
 }

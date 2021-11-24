@@ -2,7 +2,17 @@
   <stack class="p-4 h-screen flex-col md:flex-row">
     <v-stack class="h-full overflow-auto md:flex-grow">
       <question-navigation-module/>
-      <question-module class="flex-grow m-4 overflow-auto md:mx-0 scrollbar-hide"/>
+      <question-module class="flex-grow m-4 overflow-auto md:mx-0 scrollbar-hide"
+                       :question-title="questionTitle"
+                       :options="questionOptions"
+                       :key="currentQuestionID"
+                       v-if="forRerenderQuestionModule"
+      />
+      <v-stack v-if="!forRerenderQuestionModule" class="h-full items-center">
+        <spacer/>
+        <div class="animate-spin black w-16 h-16 border-b-2 border-gray-900 rounded-full"></div>
+        <spacer/>
+      </v-stack>
     </v-stack>
     <bottom-tool-box class="md:ml-4"/>
   </stack>
@@ -15,8 +25,73 @@ import Spacer from "~/components/utilities/layout/Spacer";
 import BottomToolBox from "~/components/views/main/BottomToolBox";
 import Stack from "~/components/utilities/layout/Stack";
 import QuestionModule from "~/components/views/main/QuestionModule";
+import {viewStateEnum} from "@/extensions/types/viewStateEnum";
+import HStack from "@/components/utilities/layout/HStack";
 
 export default {
-  components: {QuestionModule, Stack, BottomToolBox, Spacer, QuestionNavigationModule, VStack}
+  name: "index",
+  middleware: 'auth',
+  computed: {
+    forRerenderQuestionModule() {
+      return this.$store.state.questionModule.rerenderQuestionModule;
+    },
+    currentSubjectID() {
+      return this.$store.state.questionModule.currentSubjectID;
+    },
+    currentChapterID() {
+      return this.$store.state.questionModule.subjectInfo.chapters[
+        this.$store.state.questionModule.chapterIndex
+        ].id;
+    },
+    currentQuestionID() {
+      if (this.$store.state.questionModule.chapterInfo === null) {
+        return -1;
+      } else {
+        return this.$store.state.questionModule.chapterInfo.questions[
+          this.$store.state.questionModule.questionIndex
+          ].id;
+      }
+    },
+    currentQuestionInfo() {
+      return this.$store.state.questionModule.questionInfo;
+    },
+    questionTitle() {
+      if (this.$store.state.questionModule.questionInfo === null) {
+        return "";
+      } else {
+        return this.$store.state.questionModule.questionInfo.content;
+      }
+    },
+    questionOptions() {
+      if (this.$store.state.questionModule.questionInfo === null) {
+        return [];
+      } else {
+        return this.$store.state.questionModule.questionInfo.choices;
+      }
+    }
+  },
+  components: {HStack, QuestionModule, Stack, BottomToolBox, Spacer, QuestionNavigationModule, VStack},
+  methods: {
+    fetchInfo() {
+      this.$axios.$get("/api/subjects/" + this.currentSubjectID).then((res) => {
+        this.$store.commit('questionModule/setSubjectInfo', res)
+        this.$axios.$get("/api/chapters/" + this.currentChapterID).then((res) => {
+          this.$store.commit('questionModule/setChapterInfo', res)
+          this.$store.commit('questionModule/setViewState', viewStateEnum.READY)
+          this.$axios.$get("/api/questions/" + this.currentQuestionID).then((res) => {
+            this.$store.commit('questionModule/setRerenderQuestionModule',false);
+            this.$store.commit('questionModule/setQuestionInfo', res)
+            this.$store.commit('questionModule/setRerenderQuestionModule',true);
+            this.$store.commit('questionModule/setViewState', viewStateEnum.CHECKING)
+          });
+        });
+      });
+    },
+  },
+  created() {
+    this.fetchInfo();
+  },
+  mounted() {
+  }
 }
 </script>
