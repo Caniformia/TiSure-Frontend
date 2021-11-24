@@ -118,6 +118,7 @@ export default {
             this.$axios.$get("/api/questions/" + this.currentQuestionID).then((res) => {
               this.$store.commit('questionModule/setQuestionInfo', res);
               this.$store.commit('questionModule/setRerenderQuestionModule', true);
+              this.$store.commit('questionModule/setComments',[]);
               if (this.$store.state.questionModule.isMemoryMode) {
                 this.$store.commit('questionModule/setViewState', viewStateEnum.SUMMARY);
               } else {
