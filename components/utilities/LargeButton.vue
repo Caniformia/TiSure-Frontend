@@ -1,5 +1,5 @@
 <template>
-  <button class="flex-grow bg-black rounded-full">
+  <button class="active:opacity-75 flex-grow bg-black rounded-full">
   </button>
 </template>
 
