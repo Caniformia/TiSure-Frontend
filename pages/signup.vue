@@ -64,8 +64,6 @@ export default {
   },
   methods: {
     register() {
-      window.alert(this.formContent.email);
-      window.alert(this.formContent.password);
       let registerInfo = _.cloneDeep(this.formContent);
       this.$axios.$post("/api/auth", registerInfo).then((res) => {
         this.$router.push({path: '/login'});
