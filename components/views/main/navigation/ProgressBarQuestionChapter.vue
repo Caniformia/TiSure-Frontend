@@ -45,7 +45,7 @@ export default {
       } else {
         return {
           nowAt: this.$store.state.questionModule.questionIndex + 1,
-          total: _.size(this.$store.state.questionModule.chapterInfo.questions)
+          total: _.size(this.$store.state.questionModule.chapterInfo.question_ids)
         }
       }
     }

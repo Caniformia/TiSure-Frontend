@@ -74,60 +74,7 @@ export default {
       this.$store.commit('questionModule/switchMemoryMode');
     },
     onLargeButtonTapped() {
-      console.log(this.$store.state.questionModule.viewState)
-      switch (this.$store.state.questionModule.viewState) {
-        case viewStateEnum.NULL:
-          this.$store.commit('questionModule/setViewState', viewStateEnum.READY);
-          break;
-        case viewStateEnum.READY:
-          this.$store.commit('questionModule/setViewState', viewStateEnum.CHECKING);
-          break;
-        case viewStateEnum.CHECKING:
-          this.$store.commit('questionModule/setViewState', viewStateEnum.SUMMARY);
-          break;
-        case viewStateEnum.VERIFYING:
-          this.$store.commit('questionModule/setViewState', viewStateEnum.SUMMARY);
-          break;
-        case viewStateEnum.SUMMARY:
-          this.$store.commit('questionModule/setViewState', viewStateEnum.READY);
-          this.$store.commit('questionModule/setRerenderQuestionModule', false);
-
-          let correctFlag = true;
-          let choices = _.cloneDeep(this.$store.state.questionModule.questionInfo.choices);
-          console.log(choices)
-          let selected = this.$store.state.questionModule.selectedOptions
-          _.forEach(choices, function (value) {
-            if ((value.is_answer
-                && !_.includes(selected, value.id))
-              ||
-              (!value.is_answer &&
-                _.includes(selected, value.id))
-            ) {
-              correctFlag = false;
-            }
-          })
-          this.$axios.$post(
-            "/api/records",
-            {
-              question_id: this.$store.state.questionModule.questionInfo.id,
-              is_correct: correctFlag,
-              choice_ids: this.$store.state.questionModule.selectedOptions
-            }
-          ).then(r => {
-            this.$store.commit('questionModule/incrementQuestionIndex');
-            this.$axios.$get("/api/questions/" + this.currentQuestionID).then((res) => {
-              this.$store.commit('questionModule/setQuestionInfo', res);
-              this.$store.commit('questionModule/setRerenderQuestionModule', true);
-              this.$store.commit('questionModule/setComments',[]);
-              if (this.$store.state.questionModule.isMemoryMode) {
-                this.$store.commit('questionModule/setViewState', viewStateEnum.SUMMARY);
-              } else {
-                this.$store.commit('questionModule/setViewState', viewStateEnum.CHECKING);
-              }
-            })
-          })
-          break;
-      }
+      this.$store.dispatch('questionModule/switchViewState');
     }
   }
 }

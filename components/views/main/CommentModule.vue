@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="h-4"></div>
-    <div class="w-full mx-4" v-for="(comment,index) in getComments">
+    <div class="w-full px-4" v-for="(comment,index) in getComments">
       <v-stack class="my-4">
         <p class="chinese-font text-xl">
           {{comment.content}}
@@ -53,13 +53,6 @@ export default {
     }
   },
   components: {Divider, Spacer, HStack, VStack, PhArrowFatLineUp},
-  created() {
-    this.$axios.$get("/api/questions/"
-      + this.$store.state.questionModule.questionInfo.id
-      + "/comments").then(res => {
-      this.$store.commit("questionModule/setComments", res);
-    })
-  },
   methods: {
     getCommentTime(commentTime) {
       moment.locale('zh-cn')
@@ -67,20 +60,22 @@ export default {
     },
     submitComment() {
       if (this.commentMessage !== "") {
-        this.$axios.$post("/api/questions/"
-          + this.$store.state.questionModule.questionInfo.id
-          + "/comments",
-          {
-            question_id: this.$store.state.questionModule.questionInfo.id,
-            content: this.commentMessage
-          }).then(r => {
-          this.$axios.$get("/api/questions/"
-            + this.$store.state.questionModule.questionInfo.id
-            + "/comments").then(res => {
-            this.$store.commit("questionModule/setComments", res);
-            this.commentMessage = "";
-          })
-        })
+        this.$store.dispatch('questionModule/submitComment',this.commentMessage);
+        this.commentMessage = "";
+      //   this.$axios.$post("/api/questions/"
+      //     + this.$store.state.questionModule.questionInfo.id
+      //     + "/comments",
+      //     {
+      //       question_id: this.$store.state.questionModule.questionInfo.id,
+      //       content: this.commentMessage
+      //     }).then(r => {
+      //     this.$axios.$get("/api/questions/"
+      //       + this.$store.state.questionModule.questionInfo.id
+      //       + "/comments").then(res => {
+      //       this.$store.commit("questionModule/setComments", res);
+      //       this.commentMessage = "";
+      //     })
+      //   })
       }
     }
   }
