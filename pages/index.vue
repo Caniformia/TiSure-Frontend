@@ -47,9 +47,9 @@ export default {
       if (this.$store.state.questionModule.chapterInfo === null) {
         return -1;
       } else {
-        return this.$store.state.questionModule.chapterInfo.questions[
+        return this.$store.state.questionModule.chapterInfo.question_ids[
           this.$store.state.questionModule.questionIndex
-          ].id;
+          ];
       }
     },
     currentQuestionInfo() {
@@ -73,25 +73,11 @@ export default {
   components: {HStack, QuestionModule, Stack, BottomToolBox, Spacer, QuestionNavigationModule, VStack},
   methods: {
     fetchInfo() {
-      this.$axios.$get("/api/subjects/" + this.currentSubjectID).then((res) => {
-        this.$store.commit('questionModule/setSubjectInfo', res)
-        this.$axios.$get("/api/chapters/" + this.currentChapterID).then((res) => {
-          this.$store.commit('questionModule/setChapterInfo', res)
-          this.$store.commit('questionModule/setViewState', viewStateEnum.READY)
-          this.$axios.$get("/api/questions/" + this.currentQuestionID).then((res) => {
-            this.$store.commit('questionModule/setRerenderQuestionModule',false);
-            this.$store.commit('questionModule/setQuestionInfo', res)
-            this.$store.commit('questionModule/setRerenderQuestionModule',true);
-            this.$store.commit('questionModule/setViewState', viewStateEnum.CHECKING)
-          });
-        });
-      });
-    },
+      this.$store.dispatch('questionModule/indexInit');
+    }
   },
   created() {
     this.fetchInfo();
-  },
-  mounted() {
   }
 }
 </script>
