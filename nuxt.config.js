@@ -50,7 +50,7 @@ export default {
 
   proxy: {
     '/api/': {
-      target: "https://tisure-api.ddosolitary.org/",
+      target: "http://49.232.173.163:23333",
       pathRewrite: {
         '^/api/': '/'
       }
