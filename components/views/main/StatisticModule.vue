@@ -3,7 +3,9 @@
     <h-stack class="items-end mb-4">
       <p class="chinese-font text-4xl">正确率</p>
       <spacer/>
-      <p class="bold-font text-lg mr-4"> {{ correctness.toFixed(1) }}% </p>
+
+      <p v-if="correctness>=-0.5" class="bold-font text-lg mr-4"> {{ correctness.toFixed(1) }}% </p>
+      <p v-if="correctness<-0.5" class="chinese-font text-lg mr-4"> 数据不足 </p>
     </h-stack>
     <v-stack class="mb-2">
       <custom-progress-bar :percentage="correctness"></custom-progress-bar>
@@ -40,15 +42,17 @@ export default {
       } else if (this.correctness >= 75) {
         return "大概率能轻松做对！"
       } else if (this.correctness >= 60) {
-        return "或许稍微多看看比较好喔！"
+        return "或许稍微多看看会比较好喔！"
       } else if (this.correctness >= 40) {
         return "将近二分之一的概率，究极二择！"
       } else if (this.correctness >= 25) {
         return "努把力的话一定可以记住！"
       } else if (this.correctness >= 10) {
         return "啊这种就很讨厌了（摔）！"
-      } else {
+      } else if (this.correctness >= -0.5) {
         return "攀登名为航概之神的巅峰！"
+      } else {
+        return "是第一个踏足这里的人喔！"
       }
     }
   }
