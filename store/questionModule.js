@@ -18,6 +18,9 @@ export const state = () => ({
 })
 
 export const mutations = {
+  setSubjectID(state, ID) {
+    state.currentSubjectID = ID;
+  },
   setSubjectInfo(state, info) {
     state.subjectInfo = info;
   },
@@ -98,7 +101,7 @@ export const actions = {
       commit('setViewState', viewStateEnum.CHECKING);
     }
   },
-  async indexInit({commit, dispatch, state}) {
+  async questionModuleInit({commit, dispatch, state}) {
     await dispatch('getSubjectByID', state.currentSubjectID);
     await dispatch('getChapterByID', state.subjectInfo.chapters[state.chapterIndex].id)
     await commit('setViewState', viewStateEnum.READY)
