@@ -1,8 +1,8 @@
 <template>
   <stack class="p-4 h-screen flex-col md:flex-row">
-    <v-stack class="h-full overflow-auto md:flex-grow">
+    <v-stack class="h-full md:flex-grow">
       <question-navigation-module/>
-      <question-module class="flex-grow m-4 overflow-auto md:mx-0 scrollbar-hide"
+      <question-module class="flex-grow m-4 md:mx-0 overflow-auto scrollbar-hide"
                        :question-title="questionTitle"
                        :options="questionOptions"
                        :key="currentQuestionID"
