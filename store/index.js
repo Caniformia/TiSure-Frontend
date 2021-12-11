@@ -14,6 +14,13 @@ export const mutations = {
       state.viewSelector = viewSelectorEnum.SETTINGS;
     }
   },
+  switchToLists(state) {
+    if (state.viewSelector === viewSelectorEnum.LISTS) {
+      state.viewSelector = viewSelectorEnum.QUESTION;
+    } else {
+      state.viewSelector = viewSelectorEnum.LISTS;
+    }
+  },
   setViewSelector(state, selectedView) {
     state.viewSelector = selectedView;
   },
