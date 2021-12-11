@@ -32,7 +32,6 @@ import HStack from "@/components/utilities/layout/HStack";
 import VStack from "@/components/utilities/layout/VStack";
 import _ from "lodash";
 import Spacer from "@/components/utilities/layout/Spacer";
-import {viewStateEnum} from "@/extensions/types/viewStateEnum";
 
 export default {
   name: "SubjectSwitch",

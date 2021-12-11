@@ -36,6 +36,7 @@ export const mutations = {
 export const actions = {
   async emptyToInit({commit, dispatch, state}) {
     await commit('reInitialize');
+    await dispatch('listsModule/emptyToInit');
     await dispatch('questionModule/emptyToInit');
   },
   async indexInit({commit, dispatch, state}) {

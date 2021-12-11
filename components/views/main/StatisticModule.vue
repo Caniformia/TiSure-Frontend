@@ -10,7 +10,8 @@
       <custom-progress-bar :percentage="correctness"></custom-progress-bar>
     </v-stack>
     <p class="chinese-font">{{ correctnessComment }}</p>
-    <p class="chinese-font">在遇见它的 {{personalRecordCount}} 次里，你一共做对 {{personalCorrectCount}} 次，正确率为 {{ personalCorrectness.toFixed(1) }} %。{{personalCorrectnessComment}}</p>
+    <p v-if="personalRecordCount>0" class="chinese-font">在遇见它的 {{ personalRecordCount }} 次里，你一共做对
+      {{ personalCorrectCount }} 次，正确率为 {{ personalCorrectness.toFixed(1) }} %。{{ personalCorrectnessComment }}</p>
   </v-stack>
 </template>
 
