@@ -15,6 +15,7 @@ export const state = () => ({
   selectedOptions: [],
   answeredQuestions: [],
   comments: [],
+  questionStatistic: null,
   rerenderQuestionModule: false
 })
 
@@ -73,6 +74,9 @@ export const mutations = {
   setComments(state, comments) {
     state.comments = comments;
   },
+  setQuestionStatistic(state, statistic) {
+    state.questionStatistic = statistic;
+  },
   addComment(state, comment) {
     state.comments.unshift(comment);
   },
@@ -118,9 +122,11 @@ export const actions = {
   },
   async getQuestionByID({commit, state}, questionID) {
     const questionInfo = await this.$axios.$get("/api/questions/" + questionID);
+    const questionStatistic = await this.$axios.$get("/api/questions/" + questionID + "/stats");
     await commit('setRerenderQuestionModule', false);
     await commit('setQuestionInfo', questionInfo);
     await commit('setComments', questionInfo.comments);
+    await commit('setQuestionStatistic', questionStatistic);
     await commit('setRerenderQuestionModule', true);
     if (state.isMemoryMode) {
       commit('setViewState', viewStateEnum.SUMMARY);
