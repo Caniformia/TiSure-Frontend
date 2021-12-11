@@ -110,17 +110,17 @@ export const actions = {
       commit('setViewState', viewStateEnum.CHECKING);
     }
   },
-  async setCorrespondChapterQuestionIndex({commit, dispatch, state}) {
-    await commit('setChapterIndex',0);
+  async chapterRefresh({commit, dispatch, state}) {
     await commit('setQuestionIndex',0);
-  },
-  async questionModuleInit({commit, dispatch, state}) {
-    await dispatch('getSubjectByID', state.currentSubjectID);
-    await dispatch('setCorrespondChapterQuestionIndex');
     await commit('setSelectedOptions', []);
     await dispatch('getChapterByID', state.subjectInfo.chapters[state.chapterIndex].id)
     await commit('setViewState', viewStateEnum.READY)
     await dispatch('getQuestionByID', state.chapterInfo.question_ids[state.questionIndex])
+  },
+  async questionModuleInit({commit, dispatch, state}) {
+    await dispatch('getSubjectByID', state.currentSubjectID);
+    await commit('setChapterIndex',0);
+    await dispatch('chapterRefresh');
   },
   async switchViewState({commit, dispatch, state}) {
     switch (state.viewState) {

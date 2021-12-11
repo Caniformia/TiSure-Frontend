@@ -27,9 +27,18 @@ export const actions = {
   async switchSubject({commit, dispatch, state}, newSubjectID) {
     if (state["questionModule/currentSubjectID"] !== newSubjectID) {
       await commit('questionModule/setSubjectID',newSubjectID);
-      await commit('switchToSettings');
       await commit('questionModule/setRerenderQuestionModule', false);
+      await commit('switchToSettings');
       await dispatch('questionModule/questionModuleInit');
+      await commit('questionModule/setRerenderQuestionModule', true);
+    }
+  },
+  async switchChapter({commit, dispatch, state}, newChapterIndex) {
+    if (state["questionModule/chapterIndex"] !== newChapterIndex) {
+      await commit('questionModule/setChapterIndex',newChapterIndex);
+      await commit('questionModule/setRerenderQuestionModule', false);
+      await commit('switchToSettings');
+      await dispatch('questionModule/chapterRefresh');
       await commit('questionModule/setRerenderQuestionModule', true);
     }
   }
