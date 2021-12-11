@@ -11,6 +11,7 @@ import SettingsView from "@/components/SettingsView"
 
 export default {
   name: "index",
+  middleware: 'auth',
   components: {QuestionView, SettingsView},
   computed: {
     viewSelector() {

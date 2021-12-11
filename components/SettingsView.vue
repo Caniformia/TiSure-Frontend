@@ -12,6 +12,7 @@
     </h-stack>
     <subject-switch/>
     <chapter-switch/>
+    <log-out-component/>
   </v-stack>
 </template>
 
@@ -23,10 +24,11 @@ import Divider from "@/components/utilities/Divider";
 import {PhX} from "phosphor-vue";
 import SubjectSwitch from "@/components/views/settings/SubjectSwitch";
 import ChapterSwitch from "@/components/views/settings/ChapterSwitch";
+import LogOutComponent from "@/components/views/settings/LogOutComponent";
 
 export default {
   name: "settings",
-  components: {ChapterSwitch, SubjectSwitch, Divider, Spacer, HStack, VStack, PhX},
+  components: {LogOutComponent, ChapterSwitch, SubjectSwitch, Divider, Spacer, HStack, VStack, PhX},
   methods: {
     onCrossButtonTapped() {
       this.$store.commit('switchToSettings');

@@ -1,4 +1,5 @@
 import {viewStateEnum} from "@/extensions/types/viewStateEnum";
+import {viewSelectorEnum} from "@/extensions/types/viewSelectorEnum";
 
 var _ = require("lodash");
 
@@ -74,10 +75,27 @@ export const mutations = {
   },
   addComment(state, comment) {
     state.comments.unshift(comment);
+  },
+  reInitialize(state) {
+    state.currentSubjectID = 2;
+    state.subjectInfo = null;
+    state.chapterInfo = null;
+    state.questionInfo = null;
+    state.chapterIndex = 0;
+    state.questionIndex = 0;
+    state.isMemoryMode = false;
+    state.viewState = viewStateEnum.NULL;
+    state.selectedOptions = [];
+    state.answeredQuestions = [];
+    state.comments = [];
+    state.rerenderQuestionModule = false;
   }
 }
 
 export const actions = {
+  async emptyToInit({commit, dispatch, state}) {
+    await commit('reInitialize');
+  },
   async submitComment({commit, state}, commentMessage) {
     await this.$axios.$post("/api/questions/" + state.questionInfo.id + "/comments",
       {
@@ -111,7 +129,7 @@ export const actions = {
     }
   },
   async chapterRefresh({commit, dispatch, state}) {
-    await commit('setQuestionIndex',0);
+    await commit('setQuestionIndex', 0);
     await commit('setSelectedOptions', []);
     await dispatch('getChapterByID', state.subjectInfo.chapters[state.chapterIndex].id)
     await commit('setViewState', viewStateEnum.READY)
@@ -119,7 +137,7 @@ export const actions = {
   },
   async questionModuleInit({commit, dispatch, state}) {
     await dispatch('getSubjectByID', state.currentSubjectID);
-    await commit('setChapterIndex',0);
+    await commit('setChapterIndex', 0);
     await dispatch('chapterRefresh');
   },
   async switchViewState({commit, dispatch, state}) {

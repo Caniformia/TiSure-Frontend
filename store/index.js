@@ -14,15 +14,26 @@ export const mutations = {
       state.viewSelector = viewSelectorEnum.SETTINGS;
     }
   },
+  setViewSelector(state, selectedView) {
+    state.viewSelector = selectedView;
+  },
   setSubjectsInfo(state, infos) {
     state.subjectsInfo = infos;
+  },
+  reInitialize(state) {
+    state.viewSelector = viewSelectorEnum.QUESTION;
+    state.subjectsInfo = [];
   }
 }
 
 export const actions = {
+  async emptyToInit({commit, dispatch, state}) {
+    await commit('reInitialize');
+    await dispatch('questionModule/emptyToInit');
+  },
   async indexInit({commit, dispatch, state}) {
     const subjectsInfo = await this.$axios.$get("/api/subjects/");
-    await commit('setSubjectsInfo',subjectsInfo);
+    await commit('setSubjectsInfo', subjectsInfo);
   },
   async switchSubject({commit, dispatch, state}, newSubjectID) {
     if (state["questionModule/currentSubjectID"] !== newSubjectID) {
