@@ -119,6 +119,7 @@ export const actions = {
         await commit('setViewState', viewStateEnum.SUMMARY);
         break;
       case viewStateEnum.SUMMARY:
+        await commit('setRerenderQuestionModule', false)
         await commit('setViewState', viewStateEnum.READY);
         let correctFlag = true;
         let choices = await _.cloneDeep(state.questionInfo.choices);

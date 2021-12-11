@@ -20,7 +20,7 @@ export default {
         return 0;
       } else {
         return (this.$store.state.questionModule.questionIndex + 1) * 100.0 / (
-          _.size(this.$store.state.questionModule.chapterInfo.questions)
+          _.size(this.$store.state.questionModule.chapterInfo.question_ids)
         );
       }
     }
