@@ -53,6 +53,12 @@ export const mutations = {
       state.selectedOptions = [];
     }
   },
+  decrementQuestionIndex(state) {
+    if (state.questionIndex > 0) {
+      state.questionIndex--;
+      state.selectedOptions = [];
+    }
+  },
   switchMemoryMode(state) {
     if (state.isMemoryMode) {
       state.isMemoryMode = false;
@@ -183,9 +189,16 @@ export const actions = {
             choice_ids: selected
           });
         await commit('incrementQuestionIndex');
-        await console.log(state.chapterInfo.question_ids[state.questionIndex]);
         await dispatch('getQuestionByID', state.chapterInfo.question_ids[state.questionIndex]);
         break;
+    }
+  },
+  async backtraceQuestion({commit, dispatch, state}) {
+    if (state.questionIndex > 0) {
+      await commit('setRerenderQuestionModule', false)
+      await commit('setViewState', viewStateEnum.READY);
+      await commit('decrementQuestionIndex');
+      await dispatch('getQuestionByID', state.chapterInfo.question_ids[state.questionIndex]);
     }
   }
 }

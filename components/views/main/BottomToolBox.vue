@@ -2,7 +2,10 @@
   <stack class="flex-row md:flex-col-reverse">
     <stack class="flex-row md:flex-col-reverse my-1 md:my-0 md:mx-1">
       <button class="border-black border rounded-full mr-1.5 md:mt-1.5 md:mr-0 hover:border-gray-700">
-        <ph-bookmark-simple class="text-md m-0.5 hover:text-gray-700"/>
+        <ph-arrow-bend-up-left @click="onBacktraceButtonTapped" class="text-md m-0.5 hover:text-gray-700"/>
+      </button>
+      <button class="border-black border rounded-full mr-1.5 md:mt-1.5 md:mr-0 hover:border-gray-700">
+        <ph-bookmark-simple @click="onMarkButtonTapped" class="text-md m-0.5 hover:text-gray-700"/>
       </button>
       <button @click="onMemoryButtonTapped"
               class="border-black border rounded-full hover:opacity-75"
@@ -18,6 +21,7 @@
           weight="fill"
         />
       </button>
+
       <divider class="block md:hidden"/>
       <divider :horizontal=false class="hidden md:block"/>
     </stack>
@@ -43,7 +47,7 @@
 
 <script>
 import HStack from "~/components/utilities/layout/HStack";
-import {PhBookmarkSimple, PhBookOpen, PhList} from "phosphor-vue";
+import {PhBookmarkSimple, PhBookOpen, PhList, PhArrowBendUpLeft} from "phosphor-vue";
 import Stack from "~/components/utilities/layout/Stack";
 import Divider from "~/components/utilities/Divider";
 import LargeButton from "~/components/utilities/LargeButton";
@@ -54,7 +58,7 @@ var _ = require("lodash");
 
 export default {
   name: "BottomToolBox",
-  components: {LargeButton, Divider, Stack, HStack, PhBookmarkSimple, PhBookOpen, PhList},
+  components: {LargeButton, Divider, Stack, HStack, PhBookmarkSimple, PhBookOpen, PhList, PhArrowBendUpLeft},
   computed: {
     currentQuestionID() {
       if (this.$store.state.questionModule.chapterInfo === null) {
@@ -73,6 +77,9 @@ export default {
     }
   },
   methods: {
+    onBacktraceButtonTapped() {
+      this.$store.dispatch('questionModule/backtraceQuestion');
+    },
     onMemoryButtonTapped() {
       this.$store.commit('questionModule/switchMemoryMode');
     },
@@ -81,6 +88,9 @@ export default {
     },
     onSettingsButtonTapped() {
       this.$store.commit('switchToSettings');
+    },
+    onMarkButtonTapped() {
+      this.$store.commit('switchToLists');
     }
   }
 }
