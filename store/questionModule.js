@@ -18,6 +18,15 @@ export const state = () => ({
 })
 
 export const mutations = {
+  setSelectedOptions(state, options) {
+    state.selectedOptions = [];
+  },
+  setChapterIndex(state, index) {
+    state.chapterIndex = index;
+  },
+  setQuestionIndex(state, index) {
+    state.questionIndex = index;
+  },
   setSubjectID(state, ID) {
     state.currentSubjectID = ID;
   },
@@ -101,8 +110,14 @@ export const actions = {
       commit('setViewState', viewStateEnum.CHECKING);
     }
   },
+  async setCorrespondChapterQuestionIndex({commit, dispatch, state}) {
+    await commit('setChapterIndex',0);
+    await commit('setQuestionIndex',0);
+  },
   async questionModuleInit({commit, dispatch, state}) {
     await dispatch('getSubjectByID', state.currentSubjectID);
+    await dispatch('setCorrespondChapterQuestionIndex');
+    await commit('setSelectedOptions', []);
     await dispatch('getChapterByID', state.subjectInfo.chapters[state.chapterIndex].id)
     await commit('setViewState', viewStateEnum.READY)
     await dispatch('getQuestionByID', state.chapterInfo.question_ids[state.questionIndex])
