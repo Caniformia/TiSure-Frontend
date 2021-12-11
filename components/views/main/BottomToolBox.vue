@@ -31,7 +31,10 @@
     <stack class="flex-row md:flex-col-reverse my-1 md:my-0 md:mx-1">
       <divider class="block md:hidden"/>
       <divider :horizontal=false class="hidden md:block"/>
-      <button class="border-black border rounded-full hover:border-gray-700">
+      <button
+        class="border-black border rounded-full hover:border-gray-700"
+        @click="onSettingsButtonTapped"
+      >
         <ph-list class="text-md m-0.5 hover:text-gray-700"/>
       </button>
     </stack>
@@ -75,6 +78,9 @@ export default {
     },
     onLargeButtonTapped() {
       this.$store.dispatch('questionModule/switchViewState');
+    },
+    onSettingsButtonTapped() {
+      this.$store.commit('switchToSettings');
     }
   }
 }
