@@ -1,9 +1,8 @@
 <template>
   <v-stack>
     <h-stack class="items-end mb-4">
-      <p class="chinese-font text-4xl">正确率</p>
+      <p class="chinese-font text-4xl">大家的正确率</p>
       <spacer/>
-
       <p v-if="correctness>=-0.5" class="bold-font text-lg mr-4"> {{ correctness.toFixed(1) }}% </p>
       <p v-if="correctness<-0.5" class="chinese-font text-lg mr-4"> 数据不足 </p>
     </h-stack>
@@ -11,6 +10,7 @@
       <custom-progress-bar :percentage="correctness"></custom-progress-bar>
     </v-stack>
     <p class="chinese-font">{{ correctnessComment }}</p>
+    <p class="chinese-font">在遇见它的 {{personalRecordCount}} 次里，你一共做对 {{personalCorrectCount}} 次，正确率为 {{ personalCorrectness.toFixed(1) }} %。{{personalCorrectnessComment}}</p>
   </v-stack>
 </template>
 
@@ -27,6 +27,29 @@ export default {
   name: "StatisticModule",
   components: {CustomProgressBar, Divider, Spacer, HStack, VStack},
   computed: {
+    personalRecordCount() {
+      if (this.$store.state.questionModule.questionStatistic.currentUser !== null) {
+        return this.$store.state.questionModule.questionStatistic.current_user.record_count;
+      } else {
+        return 0;
+      }
+    },
+    personalCorrectCount() {
+      if (this.$store.state.questionModule.questionStatistic.currentUser !== null) {
+        return this.$store.state.questionModule.questionStatistic.current_user.correct_count;
+      } else {
+        return 0;
+      }
+    },
+    personalCorrectness() {
+      if (this.$store.state.questionModule.questionStatistic !== null) {
+        if (this.personalRecordCount !== 0) {
+          return this.personalCorrectCount * 100.0
+            / (this.personalRecordCount * 1.0);
+        }
+      }
+      return -1;
+    },
     correctness() {
       if (this.$store.state.questionModule.questionStatistic !== null) {
         if (this.$store.state.questionModule.questionStatistic.all_users.record_count !== 0) {
@@ -53,6 +76,17 @@ export default {
         return "攀登名为航概之神的巅峰！"
       } else {
         return "是第一个踏足这里的人喔！"
+      }
+    },
+    personalCorrectnessComment() {
+      if (this.personalCorrectness >= 80) {
+        return "易如反掌啦~（摊手）";
+      } else if (this.personalCorrectness >= 50) {
+        return "问题不大！"
+      } else if (this.personalCorrectness >= 20) {
+        return "是比较需要注意的题目！"
+      } else {
+        return "考试遇到的话真的会哭出来的！请多给它一些时间！"
       }
     }
   }
