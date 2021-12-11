@@ -1,6 +1,6 @@
 <template>
   <stack class="p-4 h-screen flex-col md:flex-row">
-    <v-stack class="h-full md:flex-grow">
+    <v-stack class="h-full md:flex-grow overflow-auto">
       <question-navigation-module/>
       <question-module class="flex-grow m-4 md:mx-0 overflow-auto scrollbar-hide"
                        :question-title="questionTitle"
