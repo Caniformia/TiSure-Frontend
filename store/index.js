@@ -4,7 +4,8 @@ import _ from "lodash";
 
 export const state = () => ({
   viewSelector: viewSelectorEnum.QUESTION,
-  subjectsInfo: []
+  subjectsInfo: [],
+  userInfo: null
 })
 
 export const mutations = {
@@ -28,9 +29,13 @@ export const mutations = {
   setSubjectsInfo(state, infos) {
     state.subjectsInfo = infos;
   },
+  setUserInfo(state, info) {
+    state.userInfo = info;
+  },
   reInitialize(state) {
     state.viewSelector = viewSelectorEnum.QUESTION;
     state.subjectsInfo = [];
+    state.userInfo = null;
   }
 }
 
@@ -43,6 +48,11 @@ export const actions = {
   async indexInit({commit, dispatch, state}) {
     const subjectsInfo = await this.$axios.$get("/api/subjects/");
     await commit('setSubjectsInfo', subjectsInfo);
+    const userInfo = await this.$axios.$get("/api/user");
+    await commit('setUserInfo', userInfo);
+    if (userInfo.last_accessed_subject != null) {
+      await commit('questionModule/setSubjectID',userInfo.last_accessed_subject.id)
+    }
   },
   async switchSubject({commit, dispatch, state}, newSubjectID) {
     if (state["questionModule/currentSubjectID"] !== newSubjectID) {
@@ -51,6 +61,9 @@ export const actions = {
       await commit('switchToSettings');
       await dispatch('questionModule/questionModuleInit');
       await commit('questionModule/setRerenderQuestionModule', true);
+      await this.$axios.$patch("/api/auth", {
+        last_accessed_subject_id: newSubjectID
+      })
     }
   },
   async switchChapter({commit, dispatch, state}, newChapterIndex) {
