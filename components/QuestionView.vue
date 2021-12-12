@@ -2,13 +2,18 @@
   <stack class="p-4 h-screen flex-col md:flex-row">
     <v-stack class="h-full md:flex-grow overflow-auto">
       <question-navigation-module/>
+      <h-stack v-if="isFinished">
+        <spacer/>
+        <p class="chinese-font m-8 text-md"> 题都被你做完啦！请切换题单或章节~</p>
+        <spacer/>
+      </h-stack>
       <question-module class="flex-grow m-4 md:mx-0 overflow-auto scrollbar-hide"
                        :question-title="questionTitle"
                        :options="questionOptions"
                        :key="currentQuestionID"
-                       v-if="forRerenderQuestionModule"
+                       v-if="forRerenderQuestionModule && !isFinished"
       />
-      <v-stack v-if="!forRerenderQuestionModule" class="h-full items-center">
+      <v-stack v-if="!forRerenderQuestionModule && !isFinished" class="h-full items-center">
         <spacer/>
         <div class="animate-spin black w-16 h-16 border-b-2 border-gray-900 rounded-full"></div>
         <spacer/>
@@ -32,6 +37,9 @@ export default {
   name: "index",
   middleware: 'auth',
   computed: {
+    isFinished() {
+      return this.$store.state.questionModule.questionIndex === 99999;
+    },
     forRerenderQuestionModule() {
       return this.$store.state.questionModule.rerenderQuestionModule;
     },

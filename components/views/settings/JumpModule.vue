@@ -3,7 +3,8 @@
     <h-stack class="my-2">
       <p class="chinese-font text-2xl">跳转题目</p>
       <spacer/>
-      <p class="bold-font text-lg mr-2"> {{ getQuestionIndex }} / {{ getQuestionsCount }}</p>
+      <p v-if="!isFinished" class="bold-font text-lg mr-2"> {{ getQuestionIndex }} / {{ getQuestionsCount }}</p>
+      <p v-if="isFinished" class="bold-font text-lg mr-2"> Finished. / {{ getQuestionsCount }}</p>
     </h-stack>
     <div class="relative">
       <input v-model="targetQuestionIndex" class="border border-black text-gray-900 rounded-full block w-full p-4">
@@ -33,6 +34,9 @@ export default {
   },
   components: {Divider, Spacer, HStack, VStack, PhArrowRight},
   computed: {
+    isFinished() {
+      return this.$store.state.questionModule.questionIndex === 99999;
+    },
     getQuestionsCount() {
       return _.size(this.$store.state.questionModule.chapterInfo.question_ids)
     },
@@ -43,7 +47,7 @@ export default {
   methods: {
     jumpQuestion() {
       if (!isNaN(parseInt(this.targetQuestionIndex))) {
-        this.$store.dispatch('jumpQuestion',(parseInt(this.targetQuestionIndex)-1));
+        this.$store.dispatch('jumpQuestion', (parseInt(this.targetQuestionIndex) - 1));
         this.targetQuestionIndex = "";
       }
     }
