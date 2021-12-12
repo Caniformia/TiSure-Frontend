@@ -1,7 +1,7 @@
 <template>
   <stack class="flex-row md:flex-col-reverse">
     <stack class="flex-row md:flex-col-reverse my-1 md:my-0 md:mx-1">
-      <button class="border-black border rounded-full mr-1.5 md:mt-1.5 md:mr-0 hover:border-gray-700">
+      <button :disabled="isFinished" class="border-black border rounded-full mr-1.5 md:mt-1.5 md:mr-0 hover:border-gray-700">
         <ph-arrow-bend-up-left @click="onBacktraceButtonTapped" class="text-md m-0.5 hover:text-gray-700"/>
       </button>
       <button class="border-black border rounded-full mr-1.5 md:mt-1.5 md:mr-0 hover:border-gray-700">
@@ -28,7 +28,7 @@
 
     <button
       :class="isLargeButtonDisabled ? 'animate-pulse': ''"
-      :disabled="isLargeButtonDisabled"
+      :disabled="isLargeButtonDisabled || isFinished"
       @click="onLargeButtonTapped"
       class="active:opacity-75 flex-grow bg-black rounded-full"
     />
@@ -60,6 +60,9 @@ export default {
   name: "BottomToolBox",
   components: {LargeButton, Divider, Stack, HStack, PhBookmarkSimple, PhBookOpen, PhList, PhArrowBendUpLeft},
   computed: {
+    isFinished() {
+      return this.$store.state.questionModule.questionIndex === 99999;
+    },
     currentQuestionID() {
       if (this.$store.state.questionModule.chapterInfo === null) {
         return -1;
