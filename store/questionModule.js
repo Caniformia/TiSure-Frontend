@@ -118,7 +118,10 @@ export const actions = {
     await commit('addComment', {
       content: commentMessage,
       created_at: Date(),
-      question_id: state.questionInfo.id
+      question_id: state.questionInfo.id,
+      user: {
+        nickname: "我"
+      }
     })
   },
   async getSubjectByID({commit}, subjectID) {
