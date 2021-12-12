@@ -17,11 +17,16 @@
     <div class="w-full px-4" v-for="(comment,index) in getComments">
       <v-stack class="my-4">
         <p class="chinese-font text-xl">
-          {{comment.content}}
+          {{ comment.content }}
         </p>
-        <p class="chinese-font text-md">
-          {{ getCommentTime(comment.created_at) }}
-        </p>
+        <h-stack>
+          <p class="chinese-font font-bold text-md mr-2">
+            {{ comment.user.nickname }}
+          </p>
+          <p class="chinese-font text-md opacity-75">
+            {{ getCommentTime(comment.created_at) }}
+          </p>
+        </h-stack>
       </v-stack>
     </div>
   </v-stack>
@@ -34,6 +39,7 @@ import Spacer from "@/components/utilities/layout/Spacer";
 import Divider from "@/components/utilities/Divider";
 import {PhArrowFatLineUp, PhBookOpen, PhList} from "phosphor-vue";
 import moment from 'moment';
+
 var _ = require("lodash");
 
 
@@ -45,7 +51,7 @@ export default {
     }
   },
   computed: {
-    getCommentCount(){
+    getCommentCount() {
       return _.size(this.$store.state.questionModule.comments);
     },
     getComments() {
@@ -60,22 +66,22 @@ export default {
     },
     submitComment() {
       if (this.commentMessage !== "") {
-        this.$store.dispatch('questionModule/submitComment',this.commentMessage);
+        this.$store.dispatch('questionModule/submitComment', this.commentMessage);
         this.commentMessage = "";
-      //   this.$axios.$post("/api/questions/"
-      //     + this.$store.state.questionModule.questionInfo.id
-      //     + "/comments",
-      //     {
-      //       question_id: this.$store.state.questionModule.questionInfo.id,
-      //       content: this.commentMessage
-      //     }).then(r => {
-      //     this.$axios.$get("/api/questions/"
-      //       + this.$store.state.questionModule.questionInfo.id
-      //       + "/comments").then(res => {
-      //       this.$store.commit("questionModule/setComments", res);
-      //       this.commentMessage = "";
-      //     })
-      //   })
+        //   this.$axios.$post("/api/questions/"
+        //     + this.$store.state.questionModule.questionInfo.id
+        //     + "/comments",
+        //     {
+        //       question_id: this.$store.state.questionModule.questionInfo.id,
+        //       content: this.commentMessage
+        //     }).then(r => {
+        //     this.$axios.$get("/api/questions/"
+        //       + this.$store.state.questionModule.questionInfo.id
+        //       + "/comments").then(res => {
+        //       this.$store.commit("questionModule/setComments", res);
+        //       this.commentMessage = "";
+        //     })
+        //   })
       }
     }
   }

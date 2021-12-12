@@ -14,13 +14,12 @@
         <HStack class="m-2 items-center">
           <div class="chinese-font text-md ml-2 mr-6"
                :class="{'text-white':isReverse(subject.id)}">
-            航概（{{ subject.name }}）
+            {{ subject.name }}
           </div>
           <spacer/>
-          <div class="chinese-font text-md text-left pr-2"
-               :class="{'text-white':isReverse(subject.id)}">
-            156 / 954
-          </div>
+          <subject-progress
+            :subject-i-d="subject.id"
+            :class="{'text-white':isReverse(subject.id)}"/>
         </HStack>
       </button>
     </div>
@@ -32,10 +31,11 @@ import HStack from "@/components/utilities/layout/HStack";
 import VStack from "@/components/utilities/layout/VStack";
 import _ from "lodash";
 import Spacer from "@/components/utilities/layout/Spacer";
+import SubjectProgress from "@/components/views/settings/SubjectProgress";
 
 export default {
   name: "SubjectSwitch",
-  components: {Spacer, VStack, HStack},
+  components: {SubjectProgress, Spacer, VStack, HStack},
   computed: {
     getSubjectsCount() {
       return _.size(this.$store.state.subjectsInfo);

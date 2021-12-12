@@ -1,5 +1,6 @@
 import {viewSelectorEnum} from "@/extensions/types/viewSelectorEnum";
 import {viewStateEnum} from "@/extensions/types/viewStateEnum";
+import _ from "lodash";
 
 export const state = () => ({
   viewSelector: viewSelectorEnum.QUESTION,
@@ -45,7 +46,7 @@ export const actions = {
   },
   async switchSubject({commit, dispatch, state}, newSubjectID) {
     if (state["questionModule/currentSubjectID"] !== newSubjectID) {
-      await commit('questionModule/setSubjectID',newSubjectID);
+      await commit('questionModule/setSubjectID', newSubjectID);
       await commit('questionModule/setRerenderQuestionModule', false);
       await commit('switchToSettings');
       await dispatch('questionModule/questionModuleInit');
@@ -54,11 +55,27 @@ export const actions = {
   },
   async switchChapter({commit, dispatch, state}, newChapterIndex) {
     if (state["questionModule/chapterIndex"] !== newChapterIndex) {
-      await commit('questionModule/setChapterIndex',newChapterIndex);
+      await commit('questionModule/setChapterIndex', newChapterIndex);
       await commit('questionModule/setRerenderQuestionModule', false);
       await commit('switchToSettings');
       await dispatch('questionModule/chapterRefresh');
       await commit('questionModule/setRerenderQuestionModule', true);
+    }
+  },
+  async addQuestionToList({commit, dispatch, state}, listID) {
+    await this.$axios.$post("/api/question_list_items/", {
+      question_id: state.questionModule.questionInfo.id,
+      question_list_id: listID
+    });
+    await dispatch('listsModule/listsModuleInit');
+  },
+  async jumpQuestion({commit, dispatch, state}, targetQuestionIndex) {
+    if ((targetQuestionIndex < _.size(state.questionModule.chapterInfo.question_ids)) && (targetQuestionIndex >= 0)) {
+      await commit('questionModule/setRerenderQuestionModule', false)
+      await commit('questionModule/setViewState', viewStateEnum.READY);
+      await commit('questionModule/setQuestionIndex', targetQuestionIndex);
+      await commit('switchToSettings');
+      await dispatch('questionModule/getQuestionByID', state.questionModule.chapterInfo.question_ids[state.questionModule.questionIndex]);
     }
   }
 }

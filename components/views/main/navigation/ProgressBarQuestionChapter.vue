@@ -1,11 +1,11 @@
 <template>
   <h-stack>
-    <button class="hover:opacity-75">
+<!--    <button class="hover:opacity-75">-->
       <h-stack>
         <div class="chinese-font pr-1 opacity-60">{{ this.chapterName.mainTitle }}</div>
         <div class="chinese-font">{{ this.chapterName.subTitle }}</div>
       </h-stack>
-    </button>
+<!--    </button>-->
     <spacer></spacer>
     <div class="chinese-font pr-1 opacity-80">{{ questionNumber.nowAt }}</div>
     <div class="chinese-font pr-1">/</div>
@@ -30,8 +30,9 @@ export default {
           subTitle: ""
         };
       } else {
+        let numberToKanji = ["零","一","二","三","四","五","六","七","八","九"]
         return {
-          mainTitle: this.$store.state.questionModule.chapterInfo.name,
+          mainTitle: "第" + numberToKanji[this.$store.state.questionModule.chapterIndex + 1] + "章",
           subTitle: this.$store.state.questionModule.chapterInfo.name
         }
       }

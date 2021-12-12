@@ -12,15 +12,19 @@
               :disabled = "isReverse(index)"
       >
         <HStack class="m-2 items-center">
+          <div class="chinese-font pr-1 opacity-60"
+               :class="{'text-white':isReverse(index)}"
+          >
+            第{{ numberToKanji[index + 1] }}章
+          </div>
+
           <div class="chinese-font text-md ml-2 mr-6"
                :class="{'text-white':isReverse(index)}">
             {{ chapter.name }}
           </div>
           <spacer/>
-          <div class="chinese-font text-md text-left pr-2"
-               :class="{'text-white':isReverse(index)}">
-            156 / 954
-          </div>
+          <chapter-progress :chapter-i-d="chapter.id"
+            :class="{'text-white':isReverse(index)}"/>
         </HStack>
       </button>
     </div>
@@ -32,10 +36,16 @@ import HStack from "@/components/utilities/layout/HStack";
 import VStack from "@/components/utilities/layout/VStack";
 import _ from "lodash";
 import Spacer from "@/components/utilities/layout/Spacer";
+import ChapterProgress from "@/components/views/settings/ChapterProgress";
 
 export default {
   name: "ChapterSwitch",
-  components: {Spacer, VStack, HStack},
+  components: {ChapterProgress, Spacer, VStack, HStack},
+  data(){
+    return {
+      numberToKanji: ["零","一","二","三","四","五","六","七","八","九"]
+    }
+  },
   computed: {
     getChaptersCount() {
       return _.size(this.$store.state.questionModule.subjectInfo.chapters);
