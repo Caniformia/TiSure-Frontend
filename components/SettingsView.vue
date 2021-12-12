@@ -1,5 +1,5 @@
 <template>
-  <v-stack class="p-8">
+  <v-stack class="py-8 px-6">
     <h-stack class="py-4">
       <p class="chinese-font text-4xl">设置</p>
       <spacer/>

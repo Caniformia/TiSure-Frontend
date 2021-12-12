@@ -18,7 +18,7 @@
             第{{ numberToKanji[index + 1] }}章
           </div>
 
-          <div class="chinese-font text-md ml-2 mr-6"
+          <div class="chinese-font text-md ml-1 mr-2"
                :class="{'text-white':isReverse(index)}">
             {{ chapter.name }}
           </div>
