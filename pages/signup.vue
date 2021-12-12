@@ -12,6 +12,10 @@
           <p class="medium-font-italic text-gray-800 text-lg ml-2 mb-0.5">Email</p>
           <input v-model="formContent.email" class="border border-black text-gray-900 rounded-full block w-full p-4">
           <div class="h-4"></div>
+          <p class="medium-font-italic text-gray-800 text-lg ml-2 mb-0.5">Nickname</p>
+          <input v-model="formContent.nickname"
+                 class="border border-black text-gray-900 rounded-full block w-full p-4">
+          <div class="h-4"></div>
           <p class="medium-font-italic text-gray-800 text-lg ml-2 mb-0.5">Password</p>
           <input type="password" v-model="formContent.password"
                  class="border border-black text-gray-900 rounded-full block w-full p-4">
@@ -58,6 +62,7 @@ export default {
       formContent: {
         email: "",
         password: "",
+        nickname: ""
       },
       error: null,
     }
@@ -65,9 +70,11 @@ export default {
   methods: {
     register() {
       let registerInfo = _.cloneDeep(this.formContent);
-      this.$axios.$post("/api/auth", registerInfo).then((res) => {
-        this.$router.push({path: '/login'});
-      })
+      if (registerInfo.email !== "" && registerInfo.password !== "" && registerInfo.nickname !== "") {
+        this.$axios.$post("/api/auth", registerInfo).then((res) => {
+          this.$router.push({path: '/login'});
+        })
+      }
     },
   }
 }

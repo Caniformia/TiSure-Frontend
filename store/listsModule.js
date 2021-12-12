@@ -24,6 +24,7 @@ export const actions = {
     const lists = await this.$axios.$get("/api/question_lists/");
     await commit('setLists', lists);
     await commit('setLoading', false);
+    await this.$axios.$get("/api/chapters/10/progress");
   },
   async addList({commit, dispatch, state}, listName) {
     await this.$axios.$post("/api/question_lists/",{

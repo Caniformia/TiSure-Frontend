@@ -19,30 +19,35 @@
               {{ list.name }}
             </div>
             <spacer/>
-            <div class="chinese-font text-md text-left pr-2"
+            <div class="bold-font text-md text-left pr-2"
                  :class="{'text-white':isReverse(list.id)}">
-              156 / 954
+              {{list.question_count}}
             </div>
           </HStack>
         </button>
         <div class="px-2 pt-1">
           <button
             class="flex-shrink bg-black border-black border rounded-full hover:border-gray-700"
-            @click="onSettingsButtonTapped"
+            @click="onAddButtonTapped(list.id)"
           >
             <ph-plus weight="bold" class="text-xl text-white m-1 hover:text-gray-700"/>
           </button>
         </div>
         <div class="pr-2 pt-1">
-        <button
-          class="flex-shrink bg-black border-black border rounded-full hover:border-gray-700"
-          @click="onSettingsButtonTapped"
-        >
-          <ph-arrow-bend-up-right weight="bold" class="text-xl text-white m-1 hover:text-gray-700"/>
-        </button>
-      </div>
+          <button
+            class="flex-shrink bg-black border-black border rounded-full hover:border-gray-700"
+            @click="onShareButtonTapped"
+          >
+            <ph-arrow-bend-up-right weight="bold" class="text-xl text-white m-1 hover:text-gray-700"/>
+          </button>
+        </div>
       </h-stack>
     </div>
+    <h-stack v-if="getListsCount<=0">
+      <spacer />
+      <p class="chinese-font text-md m-8">还没有题单喔，创建一个吧！</p>
+      <spacer />
+    </h-stack>
   </v-stack>
 </template>
 
@@ -65,6 +70,12 @@ export default {
     }
   },
   methods: {
+    onAddButtonTapped(listID) {
+      this.$store.dispatch('addQuestionToList', listID);
+    },
+    onShareButtonTapped() {
+      this.$store.dispatch('questionModule/backtraceQuestion');
+    },
     handleTapped(listID) {
       if (subjectID !== this.$store.state.questionModule.currentSubjectID) {
         // this.$store.dispatch('switchSubject', subjectID);

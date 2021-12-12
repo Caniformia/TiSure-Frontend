@@ -28,6 +28,7 @@ export const mutations = {
   },
   setQuestionIndex(state, index) {
     state.questionIndex = index;
+    state.selectedOptions = [];
   },
   setSubjectID(state, ID) {
     state.currentSubjectID = ID;
@@ -48,16 +49,18 @@ export const mutations = {
     state.rerenderQuestionModule = rerender;
   },
   incrementQuestionIndex(state) {
-    if (state.questionIndex < _.size(state.chapterInfo.question_ids)) {
-      state.questionIndex++;
-      state.selectedOptions = [];
-    }
+    state.questionIndex++;
+    state.selectedOptions = [];
   },
   decrementQuestionIndex(state) {
-    if (state.questionIndex > 0) {
-      state.questionIndex--;
-      state.selectedOptions = [];
-    }
+    state.questionIndex--;
+    state.selectedOptions = [];
+  },
+  incrementChapterIndex(state) {
+    state.chapterIndex++;
+  },
+  decrementChapterIndex(state) {
+    state.chapterIndex--;
   },
   switchMemoryMode(state) {
     if (state.isMemoryMode) {
@@ -141,15 +144,34 @@ export const actions = {
     }
   },
   async chapterRefresh({commit, dispatch, state}) {
-    await commit('setQuestionIndex', 0);
-    await commit('setSelectedOptions', []);
     await dispatch('getChapterByID', state.subjectInfo.chapters[state.chapterIndex].id)
     await commit('setViewState', viewStateEnum.READY)
+
+    const chapterProgress = await this.$axios.$get("/api/chapters/" + state.chapterInfo.id + "/progress");
+    await commit('setQuestionIndex', 0);
+
+    if (chapterProgress.last_accessed_question !== null) {
+      let questionIndex = await _.indexOf(state.chapterInfo.question_ids, chapterProgress.last_accessed_question.id);
+      if (questionIndex !== -1) {
+        await commit('setQuestionIndex', questionIndex);
+      }
+    }
+
+    await commit('setSelectedOptions', []);
+
     await dispatch('getQuestionByID', state.chapterInfo.question_ids[state.questionIndex])
   },
   async questionModuleInit({commit, dispatch, state}) {
     await dispatch('getSubjectByID', state.currentSubjectID);
+    let chapterID = await state.subjectInfo.chapters.map(chapter => chapter.id);
+    const subjectProgress = await this.$axios.$get("/api/subjects/" + state.currentSubjectID + "/progress");
     await commit('setChapterIndex', 0);
+    if (subjectProgress.last_accessed_chapter !== null) {
+      let chapterIndex = await _.indexOf(chapterID, subjectProgress.last_accessed_chapter.id);
+      if (chapterIndex !== -1) {
+        await commit('setChapterIndex', chapterIndex);
+      }
+    }
     await dispatch('chapterRefresh');
   },
   async switchViewState({commit, dispatch, state}) {
@@ -182,13 +204,29 @@ export const actions = {
             correctFlag = false;
           }
         });
-        await this.$axios.$post("/api/records",
-          {
-            question_id: state.questionInfo.id,
-            is_correct: correctFlag,
-            choice_ids: selected
-          });
-        await commit('incrementQuestionIndex');
+        if (!state.isMemoryMode) {
+          await this.$axios.$post("/api/records",
+            {
+              question_id: state.questionInfo.id,
+              is_correct: correctFlag,
+              choice_ids: selected
+            });
+        }
+        await this.$axios.$put("/api/subjects/" + state.currentSubjectID + "/progress", {
+          last_accessed_chapter_id: state.subjectInfo.chapters[state.chapterIndex].id
+        });
+        await this.$axios.$put("/api/chapters/" + state.subjectInfo.chapters[state.chapterIndex].id + "/progress", {
+          last_accessed_question_id: state.chapterInfo.question_ids[state.questionIndex]
+        });
+        if (state.questionIndex < (_.size(state.chapterInfo.question_ids) - 1)) {
+          await commit('incrementQuestionIndex');
+        } else {
+          if (state.chapterIndex < (_.size(state.subjectInfo.chapters) - 1)) {
+            await commit('incrementChapterIndex');
+            await commit('setQuestionIndex', 0);
+            await dispatch('getChapterByID', state.subjectInfo.chapters[state.chapterIndex].id);
+          }
+        }
         await dispatch('getQuestionByID', state.chapterInfo.question_ids[state.questionIndex]);
         break;
     }
@@ -199,6 +237,15 @@ export const actions = {
       await commit('setViewState', viewStateEnum.READY);
       await commit('decrementQuestionIndex');
       await dispatch('getQuestionByID', state.chapterInfo.question_ids[state.questionIndex]);
+    } else {
+      if (state.chapterIndex > 0) {
+        await commit('setRerenderQuestionModule', false)
+        await commit('setViewState', viewStateEnum.READY);
+        await commit('decrementChapterIndex');
+        await commit('setQuestionIndex', 0);
+        await dispatch('getChapterByID', state.subjectInfo.chapters[state.chapterIndex].id);
+        await dispatch('getQuestionByID', state.chapterInfo.question_ids[state.questionIndex]);
+      }
     }
   }
 }

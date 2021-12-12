@@ -10,8 +10,9 @@
         <ph-x class="text-4xl m-0.5 hover:text-gray-700"/>
       </button>
     </h-stack>
-    <subject-switch/>
+    <JumpModule/>
     <chapter-switch/>
+    <subject-switch/>
     <log-out-component/>
   </v-stack>
 </template>
@@ -25,10 +26,11 @@ import {PhX} from "phosphor-vue";
 import SubjectSwitch from "@/components/views/settings/SubjectSwitch";
 import ChapterSwitch from "@/components/views/settings/ChapterSwitch";
 import LogOutComponent from "@/components/views/settings/LogOutComponent";
+import JumpModule from "@/components/views/settings/JumpModule";
 
 export default {
   name: "settings",
-  components: {LogOutComponent, ChapterSwitch, SubjectSwitch, Divider, Spacer, HStack, VStack, PhX},
+  components: {JumpModule, LogOutComponent, ChapterSwitch, SubjectSwitch, Divider, Spacer, HStack, VStack, PhX},
   methods: {
     onCrossButtonTapped() {
       this.$store.commit('switchToSettings');

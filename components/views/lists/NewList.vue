@@ -2,8 +2,6 @@
   <v-stack>
     <h-stack class="my-2">
       <p class="chinese-font text-2xl">创建新题单</p>
-      <spacer/>
-      <p class="bold-font text-lg mr-4">{{ getSubjectsCount }}</p>
     </h-stack>
     <div class="relative">
       <input v-model="listName" class="border border-black text-gray-900 rounded-full block w-full p-4">
