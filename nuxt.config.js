@@ -52,7 +52,7 @@ export default {
 
   proxy: {
     '/api/': {
-      target: "http://49.232.173.163:23333",
+      target: process.env.API_BASE_URL,
       pathRewrite: {
         '^/api/': '/'
       }
