@@ -12,7 +12,7 @@
               :disabled = "isReverse(subject.id)"
       >
         <HStack class="m-2 items-center">
-          <div class="chinese-font text-md ml-2 mr-6"
+          <div class="chinese-font text-md mr-6"
                :class="{'text-white':isReverse(subject.id)}">
             {{ subject.name }}
           </div>
